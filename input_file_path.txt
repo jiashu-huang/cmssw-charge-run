@@ -1,0 +1,1 @@
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/315d7993-98ba-431b-8fb5-8835abca47cb.root
