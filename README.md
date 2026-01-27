@@ -9,6 +9,15 @@ The CMSSW should be preferably installed at `../CMSSW_15_1_0_patch4`.
 
 ## Run Manually on One File
 
+It is advisable to run this in a `screen` session, for the entire run may take hours. 
+
+```bash
+screen -S cmssw-charge-run
+# Do what you must
+# ctrl-a-d to get out of screen session
+screen -r cmssw-charge-run
+```
+
 0. Paste the path of the file in [./input_file_path.txt](./input_file_path.txt)
 
 1. Set up environment:
@@ -44,7 +53,7 @@ For Condor jobs that access CMS data, create a local VOMS proxy and store it
 inside this repo:
 
 ```bash
-./create_proxy.sh
+source create_proxy.sh
 ```
 
 This writes:
