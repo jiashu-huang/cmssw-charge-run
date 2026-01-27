@@ -1,0 +1,16 @@
+universe              = vanilla
+executable            = ./sample-job/my_exec.sh
+initialdir            = ./sample-job
+getenv                = true
+
+# Write logs into the same folder with job/processor stamping.
+log                   = ./sample-job/$(Cluster).$(Process).log
+output                = ./sample-job/$(Cluster).$(Process).out
+error                 = ./sample-job/$(Cluster).$(Process).err
+
+# Resource requests; tune as needed.
+request_cpus          = 2
+request_memory        = 8G
+request_disk          = 4G
+
+queue

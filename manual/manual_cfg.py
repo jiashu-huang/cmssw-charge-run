@@ -2,7 +2,7 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: nano_step --filein root://cms-xrd-global.cern.ch//store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/accc64d8-a024-461b-b97c-d42a5367e628.root --fileout file:/home/jhuan166/Vcb/CMSSW_15_1_0_patch4/output/accc64d8-a024-461b-b97c-d42a5367e628_CMSSW_15_CHARGE_NanoAOD.root --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --conditions 130X_mcRun3_2022_realistic_postEE_v6 --step NANO --era run3_nanoAOD_pre142X --python_filename /home/jhuan166/Vcb/cmssw-charge-run/manual/manual_cfg.py --no_exec -n -1
+# with command line options: nano_step --filein root://cms-xrd-global.cern.ch//store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/e839b2c2-876e-46c6-ac42-f2bbf08559d7.root --fileout file:/home/jhuan166/Vcb/CMSSW_15_1_0_patch4/output/e839b2c2-876e-46c6-ac42-f2bbf08559d7_CMSSW_15_CHARGE_NanoAOD.root --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --conditions 130X_mcRun3_2022_realistic_postEE_v6 --step NANO --era run3_nanoAOD_pre142X --python_filename /home/jhuan166/Vcb/cmssw-charge-run/manual/manual_cfg.py --no_exec -n -1
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Modifier_run3_nanoAOD_pre142X_cff import run3_nanoAOD_pre142X
@@ -28,7 +28,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/accc64d8-a024-461b-b97c-d42a5367e628.root'),
+    fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/e839b2c2-876e-46c6-ac42-f2bbf08559d7.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -80,7 +80,7 @@ process.NANOAODSIMoutput = cms.OutputModule("NanoAODOutputModule",
         dataTier = cms.untracked.string('NANOAODSIM'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string('file:/home/jhuan166/Vcb/CMSSW_15_1_0_patch4/output/accc64d8-a024-461b-b97c-d42a5367e628_CMSSW_15_CHARGE_NanoAOD.root'),
+    fileName = cms.untracked.string('file:/home/jhuan166/Vcb/CMSSW_15_1_0_patch4/output/e839b2c2-876e-46c6-ac42-f2bbf08559d7_CMSSW_15_CHARGE_NanoAOD.root'),
     outputCommands = process.NANOAODSIMEventContent.outputCommands
 )
 

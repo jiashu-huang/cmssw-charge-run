@@ -2,3 +2,9 @@
 x509up_u*
 proxy_path.txt
 *_EXAMPLE.txt
+
+# Output files 
+*.root
+
+# Condor configs 
+/condor-cfgs 

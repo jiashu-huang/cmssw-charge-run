@@ -1,0 +1,5 @@
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/315d7993-98ba-431b-8fb5-8835abca47cb.root
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/accc64d8-a024-461b-b97c-d42a5367e628.root
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/e839b2c2-876e-46c6-ac42-f2bbf08559d7.root
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/dbcb3013-e46f-42db-9267-82802d391fbe.root
+/store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/2b148b77-ce18-4dde-998a-c5ba8c7ab2d5.root
