@@ -40,28 +40,31 @@ def main() -> int:
 
     ap = argparse.ArgumentParser(description="Generate a per-file CMSSW config from sample_cfg.py.")
     ap.add_argument("input_path", help="Input file path (/store/... or root://... or local file)")
-    ap.add_argument("output_dir", help="Directory for output ROOT files (will be created if missing)")
+    ap.add_argument("cfg_dir", help="Directory where the output cfg will be written")
+    repo_root = os.path.abspath(os.path.join(script_dir, ".."))
+    default_output_dir = os.path.join(repo_root, "..", "CMSSW_15_1_0_patch4", "output")
+    ap.add_argument("root_dir", nargs="?", default=default_output_dir,
+                    help="Directory for output ROOT files (default: ../CMSSW_15_1_0_patch4/output)")
     ap.add_argument("--sample", default=default_sample, help="Path to sample_cfg.py")
-    ap.add_argument("--output-config", default=None, help="Output config path (default: <output_dir>/<basename>_cfg.py)")
     args = ap.parse_args()
 
     if not os.path.isfile(args.sample):
         print(f"ERROR: sample config not found: {args.sample}", file=sys.stderr)
         return 1
 
-    output_dir = os.path.abspath(args.output_dir)
+    cfg_dir = os.path.abspath(args.cfg_dir)
+    os.makedirs(cfg_dir, exist_ok=True)
+    output_dir = os.path.abspath(args.root_dir)
     os.makedirs(output_dir, exist_ok=True)
 
     filein = normalize_input_path(args.input_path)
     fileout = build_output_root(args.input_path, output_dir)
 
-    if args.output_config:
-        output_cfg = args.output_config
-    else:
-        base = os.path.basename(args.input_path)
-        if base.endswith(".root"):
-            base = base[:-5]
-        output_cfg = os.path.join(output_dir, f"{base}_cfg.py")
+    base = os.path.basename(args.input_path)
+    if base.endswith(".root"):
+        base = base[:-5]
+
+    output_cfg = os.path.join(cfg_dir, f"{base}_cfg.py")
 
     with open(args.sample, "r", encoding="utf-8") as f:
         sample_text = f.read()
