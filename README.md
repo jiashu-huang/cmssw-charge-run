@@ -22,7 +22,7 @@ The usage is `run_cmsdriver.sh <cmssw_src_dir> <test_file_path> [config_py] [out
 
 * the default CMSSW src is located at `../CMSSW_15_1_0_patch4/src`.
 * the default test file path is `./input_file_path.txt`
-* the default config file is [./manual/manual_cfg.py](./manual/manual_cfg.py)
+* the default config file will be created at `./manual/manual_cfg.py`
 * the default output root is located under `../CMSSW_15_1_0_patch4/output/`, by the name `${INPUT_NAME}_CMSSW_15_CHARGE_NanoAOD.root`.
 * Use -1 for `nevents` if you wish to process all events.
 
@@ -38,4 +38,27 @@ cmsRun /home/jhuan166/Vcb/cmssw-charge-run/manual/manual_cfg.py
 
 ## Run Automatically in Batches via Condor
 
-0. 
+### Create and Store VOMS Proxy
+
+For Condor jobs that access CMS data, create a local VOMS proxy and store it
+inside this repo:
+
+```bash
+./create_proxy.sh
+```
+
+This writes:
+* `./x509up_u<uid>` (the proxy file)
+* `./proxy_path.txt` (path to the proxy file)
+
+(Optional) You can load it into your shell with:
+
+```bash
+export X509_USER_PROXY="$(cat ./proxy_path.txt)"
+```
+
+### Running Condor
+
+0. Put all your input files in a .txt.
+
+1. 
