@@ -68,6 +68,38 @@ export X509_USER_PROXY="$(cat ./proxy_path.txt)"
 
 ### Running Condor
 
-0. Put all your input files in a .txt.
+Option A: dataset-first workflow (recommended)
 
-1. 
+1. Batch a dataset into per-batch input lists (includes CMSSW + proxy precheck):
+
+```bash
+./condor/batch_dataset.sh \
+  --dataset "/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v1/MINIAODSIM" \
+  --batch-size 10 \
+  --out-base batch-data-paths
+```
+
+This creates `batch-data-paths/<dataset>/batches/batch_000.txt`, `batch_001.txt`, ...
+
+2. Generate Condor jobs per batch:
+
+```bash
+./condor/make_condor_batches.sh batch-data-paths/<dataset>
+```
+
+This creates job folders under `<dataset_dir>/condor-jobs/batch_000/` by default
+and outputs under `<out-base>/<dataset>/batch_000/`. You can override paths via
+`--job-root` and `--output-root-base` or record them in `metadata.txt` at batch time.
+
+3. Submit all jobs:
+
+```bash
+./condor/submit_all_jobs.sh condor-jobs/<dataset>
+```
+
+Legacy option: if you already have a list of files (will be deprecated)
+
+```bash
+./condor/make_condor_batch.sh [--output-root-dir DIR] <input_list.txt> <job_dir>
+condor_submit <job_dir>/my_job.job
+```

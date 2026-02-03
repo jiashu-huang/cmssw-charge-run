@@ -8,6 +8,12 @@ proxy_path.txt
 
 # Condor configs 
 /condor-cfgs 
+/cms_cfgs
 
 # Paths 
 /batch-data-paths/
+
+# Generated job/output folders
+/condor-jobs/
+/outputs/
+/batch-test/

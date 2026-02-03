@@ -11,13 +11,14 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: run_batch_cmsrun.sh [--dry-run|--manual] <input_list.txt> <output_root_dir> [cmssw_src_dir] [cfg_base_dir]
+Usage: run_batch_cmsrun.sh [--dry-run|--manual] [--sample-cfg FILE] <input_list.txt> <output_root_dir> [cmssw_src_dir] [cfg_base_dir]
 
 Arguments:
   input_list.txt   Text file with one input ROOT path per line
   output_root_dir  Directory where output ROOT files will be written
   cmssw_src_dir    Path to CMSSW src directory (default: ../../CMSSW_15_1_0_patch4/src)
   cfg_base_dir     Base directory to place generated configs (default: ../cms_cfgs)
+  --sample-cfg     Optional sample_cfg.py path for config generation
 
 Behavior:
   Creates a timestamped config folder: <cfg_base_dir>/<YYYYmmdd_HHMMSS>/
@@ -30,10 +31,42 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 
 DRY_RUN=0
-if [ "${1:-}" = "--dry-run" ] || [ "${1:-}" = "--manual" ]; then
-  DRY_RUN=1
-  shift
-fi
+SAMPLE_CFG=""
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run|--manual)
+      DRY_RUN=1
+      shift
+      ;;
+    --sample-cfg)
+      SAMPLE_CFG=${2:-}
+      shift 2
+      ;;
+    --sample-cfg=*)
+      SAMPLE_CFG="${1#*=}"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "ERROR: Unknown option: $1" >&2
+      usage
+      exit 1
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+set -- "${POSITIONAL[@]}" "$@"
 
 INPUT_LIST=${1:-}
 OUTPUT_ROOT_DIR=${2:-}
@@ -55,6 +88,16 @@ if [ ! -d "$CMSSW_SRC_DIR" ]; then
   exit 1
 fi
 
+if [ -n "$SAMPLE_CFG" ]; then
+  if [[ "$SAMPLE_CFG" != /* ]]; then
+    SAMPLE_CFG="$REPO_ROOT/$SAMPLE_CFG"
+  fi
+  if [ ! -f "$SAMPLE_CFG" ]; then
+    echo "ERROR: sample cfg not found: $SAMPLE_CFG" >&2
+    exit 1
+  fi
+fi
+
 mkdir -p "$OUTPUT_ROOT_DIR"
 if [ ! -w "$OUTPUT_ROOT_DIR" ]; then
   echo "ERROR: Output directory is not writable: $OUTPUT_ROOT_DIR" >&2
@@ -69,17 +112,18 @@ echo "Input list     : $INPUT_LIST"
 echo "Output ROOT dir: $OUTPUT_ROOT_DIR"
 echo "CMSSW src dir  : $CMSSW_SRC_DIR"
 echo "Config dir     : $CFG_DIR"
+if [ -n "$SAMPLE_CFG" ]; then
+  echo "Sample cfg     : $SAMPLE_CFG"
+fi
 echo "Dry-run        : $DRY_RUN"
 echo ""
 
 if [ "$DRY_RUN" -eq 0 ]; then
-  # Set up CMSSW environment
-  set +u
-  source /cvmfs/cms.cern.ch/cmsset_default.sh
-  set -u
-  cd "$CMSSW_SRC_DIR"
-  eval "$(scramv1 runtime -sh)"
-  cd "$REPO_ROOT"
+  # Set up CMSSW environment (centralized in cmssw_precheck.sh).
+  if ! source "$REPO_ROOT/cmssw_precheck.sh" "$CMSSW_SRC_DIR"; then
+    echo "ERROR: Failed to load CMSSW environment." >&2
+    exit 1
+  fi
 fi
 
 GENERATOR="$SCRIPT_DIR/generate_config.py"
@@ -102,7 +146,12 @@ while IFS= read -r line || [ -n "$line" ]; do
 
   cfg_path="$CFG_DIR/${base}_cfg.py"
 
-  python3 "$GENERATOR" "$path" "$CFG_DIR" "$OUTPUT_ROOT_DIR"
+  GEN_ARGS=()
+  if [ -n "$SAMPLE_CFG" ]; then
+    GEN_ARGS+=(--sample "$SAMPLE_CFG")
+  fi
+
+  python3 "$GENERATOR" "${GEN_ARGS[@]}" "$path" "$CFG_DIR" "$OUTPUT_ROOT_DIR"
   if [ "$DRY_RUN" -eq 1 ]; then
     echo "Dry-run: cmsRun $cfg_path"
   else
