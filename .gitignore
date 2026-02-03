@@ -8,3 +8,6 @@ proxy_path.txt
 
 # Condor configs 
 /condor-cfgs 
+
+# Paths 
+/batch-data-paths/
