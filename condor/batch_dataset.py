@@ -206,6 +206,9 @@ def main() -> int:
     n_batches = write_batches(files, batches_dir, args.batch_size)
 
     print("Batching complete.")
+    print(f"Dataset dir: {out_dir}")
+    print(f"Batch lists: {batches_dir}")
+    print(f"Next: ./condor/make_condor_batches.sh {out_dir}")
     print(f"Output dir   : {out_dir}")
     print(f"Batch dir    : {batches_dir}")
     print(f"Total files  : {len(files)}")

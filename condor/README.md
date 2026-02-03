@@ -4,6 +4,23 @@ This folder contains helper scripts for CMSSW batch and Condor runs.
 
 ## Dataset-first workflow (recommended)
 
+Quick workflow:
+
+```bash
+DATASET="/path/to/your/dataset"
+OUT_BASE="batch-data-paths"
+./condor/batch_dataset.sh --dataset "$DATASET" --batch-size 10 --out-base "$OUT_BASE"
+
+# Copy the printed "Dataset dir: ..." path into DATASET_DIR.
+DATASET_DIR="/path/printed/by/batch_dataset.sh"
+./condor/make_condor_batches.sh "$DATASET_DIR"
+
+# Submit everything (default job root is <dataset_dir>/condor-jobs).
+./condor/submit_all_jobs.sh "$DATASET_DIR/condor-jobs"
+```
+
+### batch_dataset.sh
+
 Batch a DAS dataset into per-batch input lists (with CMSSW + proxy precheck).
 
 To run:
@@ -34,8 +51,9 @@ This creates:
 - `batch-data-paths/<dataset>/batches/batch_000.txt`, `batch_001.txt`, ...
 - `batch-data-paths/<dataset>/files_all.txt`
 - `batch-data-paths/<dataset>/dataset.txt`
+- Prints the created dataset directory path for reuse with `make_condor_batches.sh`.
 
-## generate_config.py
+### generate_config.py
 
 To run:
 
@@ -54,7 +72,7 @@ Example:
 python3 ./condor/generate_config.py /store/mc/Run3Summer22MiniAODv4/TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v1/70000/2b148b77-ce18-4dde-998a-c5ba8c7ab2d5.root ./condor/ ./condor/
 ```
 
-## run_batch_cmsrun.sh
+### run_batch_cmsrun.sh
 
 To run:
 
@@ -65,7 +83,7 @@ To run:
 - Generates per-file configs and runs `cmsRun` for each input.
 - With `--dry-run` / `--manual`, configs are generated but `cmsRun` is skipped.
 
-## make_condor_batch.sh
+### make_condor_batch.sh
 
 To run:
 
@@ -84,7 +102,7 @@ Submit from the repo root with:
 condor_submit <job_dir>/my_job.job
 ```
 
-## make_condor_batches.sh
+### make_condor_batches.sh
 
 Create per-batch Condor jobs from a batch directory.
 
@@ -113,7 +131,7 @@ and writes outputs to:
 - `<output_root_base>/<dataset>/batch_000/` (when `output_root_base` is outside the dataset dir)
 - `<output_root_base>/batch_000/` (when `output_root_base` is inside the dataset dir)
 
-## submit_all_jobs.sh
+### submit_all_jobs.sh
 
 Submit all job files under a job root.
 
