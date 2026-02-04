@@ -8,6 +8,7 @@ Quick workflow:
 
 ```bash
 DATASET="/path/to/your/dataset"
+# e.g. /TTtoLplusNu2Q-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v1/MINIAODSIM
 OUT_BASE="batch-data-paths"
 ./condor/batch_dataset.sh --dataset "$DATASET" --batch-size 10 --out-base "$OUT_BASE"
 

@@ -132,6 +132,8 @@ if [ ! -x "$GENERATOR" ] && [ ! -f "$GENERATOR" ]; then
   exit 1
 fi
 
+INPUT_PATHS=()
+CFG_PATHS=()
 while IFS= read -r line || [ -n "$line" ]; do
   # Trim whitespace
   path=$(echo "$line" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
@@ -144,18 +146,32 @@ while IFS= read -r line || [ -n "$line" ]; do
     base="${base%.root}"
   fi
 
-  cfg_path="$CFG_DIR/${base}_cfg.py"
+  INPUT_PATHS+=("$path")
+  CFG_PATHS+=("$CFG_DIR/${base}_cfg.py")
+done < "$INPUT_LIST"
 
-  GEN_ARGS=()
-  if [ -n "$SAMPLE_CFG" ]; then
-    GEN_ARGS+=(--sample "$SAMPLE_CFG")
-  fi
+if [ "${#INPUT_PATHS[@]}" -eq 0 ]; then
+  echo "ERROR: No valid input files found in: $INPUT_LIST" >&2
+  exit 1
+fi
 
-  python3 "$GENERATOR" "${GEN_ARGS[@]}" "$path" "$CFG_DIR" "$OUTPUT_ROOT_DIR"
-  if [ "$DRY_RUN" -eq 1 ]; then
+GEN_ARGS=()
+if [ -n "$SAMPLE_CFG" ]; then
+  GEN_ARGS+=(--sample "$SAMPLE_CFG")
+fi
+
+echo "Generating configs..."
+for idx in "${!INPUT_PATHS[@]}"; do
+  python3 "$GENERATOR" "${GEN_ARGS[@]}" "${INPUT_PATHS[$idx]}" "$CFG_DIR" "$OUTPUT_ROOT_DIR"
+done
+
+if [ "$DRY_RUN" -eq 1 ]; then
+  for cfg_path in "${CFG_PATHS[@]}"; do
     echo "Dry-run: cmsRun $cfg_path"
-  else
+  done
+else
+  for cfg_path in "${CFG_PATHS[@]}"; do
     echo "Running: cmsRun $cfg_path"
     cmsRun "$cfg_path"
-  fi
-done < "$INPUT_LIST"
+  done
+fi
